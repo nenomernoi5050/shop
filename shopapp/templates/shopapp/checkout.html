@@ -1,0 +1,193 @@
+{% extends "shopapp/base.html" %}
+
+
+{% block title %}
+<title>Главная</title>
+	{% endblock %}
+{% load static %}
+{%  block content %}
+
+      <div class="ps-checkout pt-80 pb-80">
+        <div class="ps-container">
+          <form class="ps-checkout__form" id="pay-form" >
+            <div class="row">
+                  <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
+                    <div class="ps-checkout__billing">
+                      <h3>Billing Detail</h3>
+                            <div class="form-group form-group--inline">
+                              <label>Ф.И.О.<span>*</span>
+                              </label>
+                              <input class="form-control" type="text" name="name">
+                            </div>
+                            <div id="email" class="form-group form-group--inline">
+                              <label>Email Address<span>*</span>
+                              </label>
+                              <input class="form-control" type="email" name="email">
+                            </div>
+                            <div class="form-group form-group--inline">
+                              <label>Phone<span>*</span>
+                              </label>
+                              <input class="form-control" type="text" name="phone">
+                            </div>
+                           <div class="form-group form-group--inline">
+                              <label>Город<span>*</span>
+                              </label>
+                              <input class="form-control" type="text" name="city">
+                            </div>
+                            <div class="form-group form-group--inline">
+                              <label>Address<span>*</span>
+                              </label>
+                              <input class="form-control" type="text" name="address">
+                            </div>
+                           <div class="form-group form-group--inline">
+                              <label>Индекс<span>*</span>
+                              </label>
+                              <input class="form-control" type="text" name="zip">
+                            </div>
+                      <div id='create-new-user' class="form-group">
+                        <div class="ps-checkbox">
+                          <input class="form-control" type="checkbox" id="cb01">
+                          <label for="cb01">Create an account?</label>
+                        </div>
+                      </div>
+                      <h3 class="mt-40"> Addition information</h3>
+                      <div class="form-group form-group--inline textarea">
+                        <label>Order Notes</label>
+                        <textarea class="form-control" rows="5" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 ">
+                    <div class="ps-checkout__order">
+                      <header>
+                        <h3>Ваш заказ</h3>
+                      </header>
+                      <div class="content">
+                        <table class="table ps-checkout__products">
+                          <thead>
+                            <tr>
+                              <th class="text-uppercase"></th>
+                              <th class="text-uppercase"></th>
+                              <th class="text-uppercase"></th>
+                              <th class="text-uppercase"> Цена </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            {% for item in items %}
+                            <tr>
+                              <td><img class="mr-15" src="/{{ item.product.cardfoto_set.first.image }}" width ="50" alt=""> </td>
+                             <td>x {{ item.quantity }}</td>
+                              <td>{{ item.product.title.capitalize|slice:":17" }} ...</td>
+                                <td>{{ item.product.price }} ₽</td>
+                            </tr>
+                                {% endfor %}
+
+                                 <tr>
+                                     <td></td><td></td>
+
+                              <td>Общее количество:</td>
+
+                              <td>{{ order.get_cart_items }} шт.</td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td>
+                              <td>Общая сумма:</td>
+
+                              <td>{{ order.get_cart_total }} ₽</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <footer>
+                        <h3>Payment Method</h3>
+                        <div class="form-group cheque">
+                          <div class="ps-radio">
+                            <input class="form-control" type="radio" id="rdo01" name="payment" checked>
+                            <label for="rdo01">Cheque Payment</label>
+                            <p>Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                          </div>
+                        </div>
+                        <div class="form-group paypal">
+                          <div class="ps-radio ps-radio--inline">
+                            <input class="form-control" type="radio" name="payment" id="rdo02">
+                            <label for="rdo02">Paypal</label>
+                          </div>
+                          <ul class="ps-payment-method">
+                            <li><a href="#"><img src="{% static 'images/payment/1.png' %}" alt=""></a></li>
+                            <li><a href="#"><img src="{% static 'images/payment/2.png' %}" alt=""></a></li>
+                            <li><a href="#"><img src="{% static 'images/payment/3.png' %}" alt=""></a></li>
+                          </ul>
+                          <button id="make-payment" type="submit" class="ps-btn ps-btn--fullwidth">Place Order<i class="ps-icon-next"></i></button>
+                        </div>
+                      </footer>
+                    </div>
+
+            </div>
+          </div>
+                            <div class="form-group">
+                    <a href="{% url 'shop:cart' %}">
+                  <button class="ps-btn ps-btn--gray">Назад в корзину</button></a>
+        </div>
+      </form>
+                </div> </div>
+    <script>
+     form = document.getElementById('pay-form')
+     total = '{{ order.get_cart_total }}'
+    if (user != 'AnonymousUser'){
+        document.getElementById('email').classList.add('hidden');
+        document.getElementById('create-new-user').classList.add('hidden');
+    }
+    form.addEventListener("submit",  function (e) {
+        e.preventDefault()
+
+
+    })
+     document.getElementById('make-payment').addEventListener("click",  function (e) {
+         sumbitFormData()
+     })
+    function sumbitFormData(){
+        console.log('Buttom clicked')
+
+             userFormData =
+                 {
+                'name': null,
+                'email': null,
+                'phone':null,
+                'total': total
+                 }
+
+        let shippingInfo =
+            {
+            'address': null,
+            'city': null,
+            'zip': null,
+
+            }
+        if (user == 'AnonymousUser'){
+            userFormData.name = form.name.value
+            userFormData.email = form.email.value
+        }
+        userFormData.name = form.name.value
+        userFormData.phone = form.phone.value
+        shippingInfo.address = form.address.value
+        shippingInfo.city = form.city.value
+        shippingInfo.zip = form.zip.value
+ console.log(userFormData)
+        url = 'http://127.0.0.1:8000/catalog/process_order/'
+        fetch(url,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({'shippingInfo': shippingInfo, 'userFormData': userFormData})
+    })
+     .then((response) => response.json())
+     .then((data) =>{
+         window.location.href = "{% url 'shop:catalog' %}"
+        })
+
+ }
+    </script>
+     {% endblock  %}
