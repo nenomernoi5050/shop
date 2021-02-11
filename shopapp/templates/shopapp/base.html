@@ -53,6 +53,25 @@
     return cookieValue;
 }
  csrftoken = getToken('csrftoken');
+            function getCookie(name) {
+                let cookieArr = document.cookie.split(';')
+
+                for (let i = 0; i < cookieArr.length; i++){
+                    let cookiePair = cookieArr[i].split('=');
+                    if (name == cookiePair[0].trim()){
+                        return decodeURIComponent(cookiePair[1]);
+                    }
+                }
+        return null;
+            }
+            let cart = JSON.parse(getCookie('cart'))
+    if (cart == undefined){
+        cart = {}
+        console.log('cart was created')
+        document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/'
+
+    }
+        console.log('cart:', cart)
     </script>
   </head>
   <body class="ps-loading">
@@ -179,7 +198,7 @@
                         <img src="/{{ item.product.cardfoto_set.first.image }}" alt="">
                     </div>
                     <div class="ps-cart-item__content"><a class="ps-cart-item__title" href="{% url 'shop:detail' sub=item.product.subcategory.first.name_slug slug=item.product.slug %}">{{ item.product.title.capitalize|slice:":13" }} ...</a>
-                      <p><span>Количество:<i>{{ item.quantity }} шт.</i></span><br><span>Сумма:<i>{{ item.product.price }} ₽</i></span></p>
+                      <p><span>Количество:<i>{{ item.quantity }}{{ item.product.quantity }} шт.</i></span><br><span>Цена:<i>{{ item.product.price }} ₽</i></span></p>
                     </div>
                   </div>
                     {% endfor %}
