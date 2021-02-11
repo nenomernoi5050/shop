@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import JsonResponse
 import json
 import datetime
-
+from .utils import cookieCart
 
 def home(request):
     if request.user.is_authenticated:
@@ -15,9 +15,10 @@ def home(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
     clothing_product = CardProduct.objects.filter(subcategory__name_slug='clothing').order_by('?')[:4]
     socks_product = CardProduct.objects.filter(subcategory__name_slug='socks').order_by('?')[:4]
@@ -36,9 +37,10 @@ def catalog(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
     object_list = CardProduct.objects.filter(subcategory__name_slug='clothing').order_by('?')
     cat = {'name_slug': 'clothing'}
@@ -61,9 +63,11 @@ def product_detail(request, *args, **kwargs):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
+
 
     x = kwargs.get("slug")
 
@@ -88,9 +92,11 @@ def subcat(request, *args, ** kwargs):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
+
 
     x = kwargs.get("slug")
 
@@ -113,15 +119,17 @@ def subcat(request, *args, ** kwargs):
 
 
 def cart(request):
+
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
     context = {'items': items, 'order': order,  'cartItems': cartItems}
     return render(request, 'shopapp/cart.html', context)
@@ -134,9 +142,10 @@ def checkout(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items = []
-        order = {'get_cart_total': 0, 'get_cart_items': 0}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'shopapp/checkout.html', context)

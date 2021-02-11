@@ -6,7 +6,7 @@ for (let i = 0; i < updateBtns.length; i++){
         let productId = this.dataset.product
         let action = this.dataset.action
         if (user === 'AnonymousUser'){
-            console.log('Is not logged in')
+           addCookieItem(productId, action)
         }
         else{
             updateUserOrder(productId, action)
@@ -14,6 +14,27 @@ for (let i = 0; i < updateBtns.length; i++){
     })
 }
 
+function addCookieItem(productId, action) {
+ console.log('Is not logged in')
+    if (action == 'add') {
+        if (cart[productId] == undefined) {
+            cart[productId] = {'quantity': 1}
+        } else {
+            cart[productId]['quantity'] += 1
+        }
+    }
+     if (action == 'remove'){
+         cart[productId]['quantity'] -= 1
+         if (cart[productId]['quantity'] <= 0){
+             console.log('Remove item')
+             delete cart[productId]
+         }
+     }
+
+    document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/'
+    console.log('cart:', cart)
+    location.reload()
+}
 
 function updateUserOrder(productId, action) {
     url = 'http://127.0.0.1:8000/catalog/update_item/'

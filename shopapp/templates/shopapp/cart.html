@@ -30,11 +30,11 @@
                   <td>
                     <div class="form-group--number">
                       <button  data-product={{item.product.id}} data-action="remove" class="minus update-cart"><span>-</span></button>
-                      <input class="form-control" type="text" value="{{ item.quantity }}">
+                      <input class="form-control" type="text" value="{{ item.quantity }}{{ item.product.quantity }}">
                       <button data-product={{item.product.id}} data-action="add" class="plus update-cart"><span>+</span></button>
                     </div>
                   </td>
-                  <td>{{ item.get_total }} ₽</td>
+                  <td>{{ item.get_total }}{{ item.product.get_total }} ₽</td>
                   <td>
                     <div class="ps-remove"></div>
                   </td>
