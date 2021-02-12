@@ -15,7 +15,7 @@
                     <div class="ps-checkout__billing">
                       <h3>Billing Detail</h3>
                             <div class="form-group form-group--inline">
-                              <label>Ф.И.О.<span>*</span>
+                              <label>Login<span>*</span>
                               </label>
                               <input class="form-control" type="text" name="name">
                             </div>
@@ -77,7 +77,7 @@
                             {% for item in items %}
                             <tr>
                               <td><img class="mr-15" src="/{{ item.product.cardfoto_set.first.image }}" width ="50" alt=""> </td>
-                             <td>x {{ item.quantity }}</td>
+                             <td>x {{ item.quantity }}{{ item.product.quantity }}</td>
                               <td>{{ item.product.title.capitalize|slice:":17" }} ...</td>
                                 <td>{{ item.product.price }} ₽</td>
                             </tr>
@@ -168,7 +168,7 @@
             userFormData.name = form.name.value
             userFormData.email = form.email.value
         }
-        userFormData.name = form.name.value
+
         userFormData.phone = form.phone.value
         shippingInfo.address = form.address.value
         shippingInfo.city = form.city.value
@@ -185,6 +185,9 @@
     })
      .then((response) => response.json())
      .then((data) =>{
+         cart = {}
+         document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/'
+
          window.location.href = "{% url 'shop:catalog' %}"
         })
 

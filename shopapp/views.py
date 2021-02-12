@@ -1,46 +1,38 @@
 from django.http import Http404
 from django.shortcuts import render
 from .models import *
+from analytics.decorators import counted
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.http import JsonResponse
 import json
 import datetime
-from .utils import cookieCart
+from .utils import cookieCart, cartData, guestOrder
+from analytics.models import *
+
 
 def home(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     clothing_product = CardProduct.objects.filter(subcategory__name_slug='clothing').order_by('?')[:4]
     socks_product = CardProduct.objects.filter(subcategory__name_slug='socks').order_by('?')[:4]
     prettyIncuffs_product = CardProduct.objects.filter(subcategory__name_slug='prettyIncuffs').order_by('?')[:4]
-
-    context = {'cartItems': cartItems, 'items': items, 'order': order, 'prettyIncuffs_product': prettyIncuffs_product, 'clothing_product': clothing_product, 'socks_product': socks_product }
+    most_popular = PageHit.objects.all().order_by('-count')[:10]
+    context = {'cartItems': cartItems, 'items': items, 'order': order, 'most_popular': most_popular, 'prettyIncuffs_product': prettyIncuffs_product, 'clothing_product': clothing_product, 'socks_product': socks_product }
 
     return render(request, 'shopapp/home.html', context)
 
 
 def catalog(request):
+    data = cartData(request)
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     object_list = CardProduct.objects.filter(subcategory__name_slug='clothing').order_by('?')
     cat = {'name_slug': 'clothing'}
@@ -56,21 +48,15 @@ def catalog(request):
     return render(request, 'shopapp/product_list.html', context)
 
 
+@counted
 def product_detail(request, *args, **kwargs):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    data = cartData(request)
 
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     x = kwargs.get("slug")
-
 
     try:
         product = get_object_or_404(CardProduct, slug=x)
@@ -80,23 +66,17 @@ def product_detail(request, *args, **kwargs):
         size = product.size.split(',')
     else:
         size = ''
-    context = {'product': product, 'size': size, 'cartItems': cartItems, 'items': items, 'order': order}
-
+    most_popular = PageHit.objects.all().order_by('-count')[:10]
+    context = {'product': product, 'size': size, 'cartItems': cartItems, 'items': items, 'order': order, 'most_popular': most_popular}
     return render(request, 'shopapp/product_detail.html', context)
 
 
 def subcat(request, *args, ** kwargs):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    data = cartData(request)
 
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     x = kwargs.get("slug")
 
@@ -119,33 +99,22 @@ def subcat(request, *args, ** kwargs):
 
 
 def cart(request):
+    data = cartData(request)
 
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     context = {'items': items, 'order': order,  'cartItems': cartItems}
     return render(request, 'shopapp/cart.html', context)
 
 
 def checkout(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'shopapp/checkout.html', context)
@@ -184,22 +153,21 @@ def processOrder(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = int(data['userFormData']['total'])
-        order.transaction_id = transaction_id
-        if total == order.get_cart_total:
-            order.complete = True
-        order.save()
-
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            adress=str(data['shippingInfo']['address']),
-            city=data['shippingInfo']['city'],
-            zip=data['shippingInfo']['zip'],
-            phone=data['userFormData']['phone']
-
-        )
     else:
-        print('User is not logged in...')
+        customer, order = guestOrder(request, data)
+
+    total = int(data['userFormData']['total'])
+    order.transaction_id = transaction_id
+    if total == order.get_cart_total:
+        order.complete = True
+    order.save()
+    ShippingAddress.objects.create(
+        customer=customer,
+        order=order,
+        adress=str(data['shippingInfo']['address']),
+        city=data['shippingInfo']['city'],
+        zip=data['shippingInfo']['zip'],
+        phone=data['userFormData']['phone']
+    )
 
     return JsonResponse('Payment complited', safe=False)

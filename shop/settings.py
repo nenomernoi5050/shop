@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'parser_site',
     'shopapp',
+    'analytics',
 
 
 ]

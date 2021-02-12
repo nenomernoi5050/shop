@@ -46,6 +46,7 @@ class CardProduct(models.Model):
     subcategory = ManyToManyField(Subcategory,   null=True, verbose_name="Разделы")
     slug = models.CharField(max_length=150,  verbose_name="slug")
 
+
     def get_sub_cat(self):
         list = self.subcategory.all()
         list_str = ''
@@ -68,6 +69,11 @@ class CardProduct(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+    def old_price(self):
+        return self.price + 700
 
     def get_absolute_url(self):
         return reverse("detail", kwargs={"slug": self.slug})
