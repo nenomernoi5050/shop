@@ -58,8 +58,13 @@
 @font-face {	font-family: 'Kholodos'; 	src: url('Kholodos.ttf'); }
 @font-face {	font-family: 'Little'; 	src: url('Little.ttf'); }
 @font-face {	font-family: 'Poppinsextralightitalic'; 	src: url('Poppinsextralightitalic.ttf'); }
+@font-face {	font-family: 'mr_DopestyleG'; 	src: url('mr_DopestyleG.otf'); }
+@font-face {	font-family: 'Comforta'; 	src: url('Comforta.ttf'); }
+@font-face {	font-family: '3d'; 	src: url('3d.otf'); }
+@font-face {	font-family: 'hors'; 	src: url('hors.otf'); }
 
 
+.cartimg img{width: 100px; margin-right: 15px;}
 .dis_none{
   display: none;
 }
@@ -2306,11 +2311,14 @@ textarea.form-control {
   .ps-widget--sidebar .ps-widget__header {
     margin-bottom: 25px; }
     .ps-widget--sidebar .ps-widget__header h3 {
-      font-family: "Archivo Narrow", sans-serif;
+      font-family: "mr_DopestyleG";
       font-size: 24px;
-      font-weight: 700;
+      /*font-weight: 700;*/
       color: #626262;
       text-transform: uppercase; }
+    .ps-product__category{
+      font-size: 12px;
+    }
   .ps-widget--sidebar .ps-table--size {
     display: block; }
     .ps-widget--sidebar .ps-table--size tbody > tr > td {
@@ -2496,9 +2504,9 @@ textarea.form-control {
     margin-bottom: 0;
   text-align: center}
     .ps-shoe .ps-shoe__categories > a {
-      font-family: "Kholodos";
+      font-family: "Comforta";
       font-size: 16px;
-      color: #ff8ea8; }
+      color: #9f9f9f; }
       .ps-shoe .ps-shoe__categories > a:hover {
         color: #ff8ea8; }
   .ps-shoe .ps-shoe__price {
@@ -4089,13 +4097,13 @@ textarea.form-control {
       position: relative;
       z-index: 10;
       display: inline-block;
-      font-family: "Archivo Narrow", sans-serif;
+      font-family: unset;
       padding: 5px 20px;
       font-size: 16px;
       font-weight: 700;
       line-height: 80px;
       text-transform: uppercase;
-      color: #000; }
+      color: #555353; }
       .menu > li > a:before {
         content: '';
         position: absolute;
@@ -5057,7 +5065,7 @@ textarea.form-control {
   .header .ps-logo {
     padding-top: 15px;
     display: inline-block;
-    max-width: 150px;
+    max-width: 100%;
     line-height: 55px; }
   .header .header__top {
     border-bottom: 1px solid #e5e5e5; }
@@ -5404,11 +5412,10 @@ textarea.form-control {
   float: left;
   padding-left: 30px; }
   .ps-product--detail .ps-product__info h1 {
-    font-family: 'Kholodos';
+    font-family: 'Comforta';
     font-size: 30px;
-    font-weight: 700;
-    color: #313131;
-    text-transform: uppercase; }
+    color: #d05d77;
+    text-transform: unset; }
 
 .ps-product--detail .ps-product__shopping .ps-product__actions {
   display: inline-block;
@@ -5538,7 +5545,7 @@ textarea.form-control {
   margin-bottom: 15px;
   font-family: "Archivo Narrow", sans-serif;
   font-size: 30px;
-  color: #000; }
+  color: mediumseagreen; }
   .ps-product--detail .ps-product__price del {
     margin-left: 5px;
     font-size: 24px;

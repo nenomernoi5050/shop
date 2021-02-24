@@ -72,7 +72,7 @@
                 responsive: null,
                 rows: 1,
                 rtl: false,
-                slide: '5',
+                slide: '',
                 slidesPerRow: 1,
                 slidesToShow: 1,
                 slidesToScroll: 1,

@@ -44,6 +44,7 @@
                               </label>
                               <input class="form-control" type="text" name="zip">
                             </div>
+
                       <div id='create-new-user' class="form-group">
                         <div class="ps-checkbox">
                           <input class="form-control" type="checkbox" id="cb01">
@@ -99,6 +100,7 @@
                           </tbody>
                         </table>
                       </div>
+
                       <footer>
                         <h3>Payment Method</h3>
                         <div class="form-group cheque">
@@ -120,6 +122,14 @@
                           </ul>
                           <button id="make-payment" type="submit" class="ps-btn ps-btn--fullwidth">Place Order<i class="ps-icon-next"></i></button>
                         </div>
+<div id='wm-widget' style='width: 200px;height: 50px;'></div>
+
+<script type='text/javascript' src='https://merchant.webmoney.ru/conf/lib/widgets/wmApp.js?v=1.5'></script>
+<script type='text/javascript'>
+window.webmoney.widgets().button.create({"data":{"amount":10,"purse":"R849647889441","desc":"Тестовый товар","paymentType":"card"},"style":{"theme":"wm","showAmount":true,"titleNum":1,"title":"","design":"skeuomorph"},"lang":"ru"}).mount('wm-widget')
+</script>
+
+
                       </footer>
                     </div>
 
@@ -130,6 +140,11 @@
                   <button class="ps-btn ps-btn--gray">Назад в корзину</button></a>
         </div>
       </form>
+    <form action="{{ form.target }}" method="POST">
+        <p>{{ form.as_p }}</p>
+        <p><input type="submit" value="Купить"></p>
+    </form>
+<script type="text/javascript" src="https://auth.robokassa.ru/Merchant/PaymentForm/FormSS.js?MerchantLogin=nenomernoitest&InvoiceID=0&Culture=ru&Encoding=utf-8&OutSum=0,00&SignatureValue=00e5080c876eb1b28cf5ecadfabf802385e999de96514500a57d8e5f8ee8e765"></script>
                 </div> </div>
     <script>
      form = document.getElementById('pay-form')

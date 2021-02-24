@@ -42,9 +42,17 @@ INSTALLED_APPS = [
     'parser_site',
     'shopapp',
     'analytics',
+    'django-robokassa-master',
+    'rest_framework'
+
 
 
 ]
+
+ROBOKASSA_LOGIN = 'nenomernoitest'
+# ROBOKASSA_PASSWORD1 = 'GJI7lI5BTsxjMR46Hc4o'
+ROBOKASSA_PASSWORD1 = 'r8aYwcvbduBS3Ne888CW'
+ROBOKASSA_TEST_MODE = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -61,7 +69,7 @@ LOGIN_REDIRECT_URL = '/accounts/profile/'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates', BASE_DIR /'mainapp-ui/build'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,7 +138,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     'parser_site/static',
-    'shopapp/static'
+    'shopapp/static',
+    BASE_DIR / 'mainapp-ui/build/static'
 
 
 ]

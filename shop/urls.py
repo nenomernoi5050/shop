@@ -22,10 +22,14 @@ from shop import settings
 from shopapp.views import *
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('payment/', include('django-robokassa-master.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('catalog/', include('shopapp.urls'))
+    path('catalog/', include('shopapp.urls')),
+    path('api/', include('shopapp.api.urls')),
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

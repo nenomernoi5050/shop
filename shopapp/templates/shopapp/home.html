@@ -54,7 +54,7 @@
                       <div class="ps-shoe__content">
                         <div class="ps-shoe__variants">
                           <div class="ps-shoe__variant normal">
-                              {% for i in item.cardfoto_set.all %}
+                              {% for i in item.cardfoto_set.all|slice:3 %}
                               <img src="/{{MEDIA_URL}}{{i.image}}" alt="">
                           {% endfor %}
                           </div>
@@ -79,13 +79,14 @@
                                  <div class="grid-item__content-wrapper">
                     <div class="ps-shoe mb-30">
                       <div class="ps-shoe__thumbnail">
-                          <a class="ps-shoe__favorite" href="{% url 'shop:detail' sub=item.subcategory.first.name_slug slug=item.slug  %}"><i class="ps-icon-heart"></i></a><img src="/{{MEDIA_URL}}{{item.cardfoto_set.first.image}}" alt=""><a class="ps-shoe__overlay" href="{% url 'shop:detail' sub=item.subcategory.first.name_slug slug=item.slug  %}"></a>
+                          <a class="ps-shoe__favorite" href="#"><i class="ps-icon-heart"></i></a><img src="/{{MEDIA_URL}}{{item.cardfoto_set.first.image}}" alt="">
+                          <a class="ps-shoe__overlay" href="{% url 'shop:detail' sub=item.subcategory.first.name_slug slug=item.slug  %}"></a>
                       <div class="ps-badge ps-badge--price"><span> {{ item.price }}₽</span></div>
                       </div>
                       <div class="ps-shoe__content">
                         <div class="ps-shoe__variants">
                           <div class="ps-shoe__variant normal">
-                              {% for i in item.cardfoto_set.all %}
+                              {% for i in item.cardfoto_set.all|slice:3 %}
                               <img src="/{{MEDIA_URL}}{{i.image}}" alt="">
                           {% endfor %}
                           </div>
@@ -116,7 +117,7 @@
                       <div class="ps-shoe__content">
                         <div class="ps-shoe__variants">
                           <div class="ps-shoe__variant normal">
-                              {% for i in item.cardfoto_set.all %}
+                              {% for i in item.cardfoto_set.all|slice:3 %}
                               <img src="/{{MEDIA_URL}}{{i.image}}" alt="">
                           {% endfor %}
                           </div>
@@ -260,7 +261,7 @@
                   <div class="ps-shoe__content">
                     <div class="ps-shoe__variants">
                       <div class="ps-shoe__variant normal">
-                         {% for i in item.product.cardfoto_set.all %}
+                         {% for i in item.product.cardfoto_set.all|slice:3 %}
                               <img src="/{{MEDIA_URL}}{{i.image}}" alt="">
                           {% endfor %}
                       </div>

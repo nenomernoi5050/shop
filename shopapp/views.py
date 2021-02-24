@@ -1,5 +1,5 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect
 from .models import *
 from analytics.decorators import counted
 from django.shortcuts import get_object_or_404
@@ -24,7 +24,8 @@ def home(request):
     most_popular = PageHit.objects.all().order_by('-count')[:10]
     context = {'cartItems': cartItems, 'items': items, 'order': order, 'most_popular': most_popular, 'prettyIncuffs_product': prettyIncuffs_product, 'clothing_product': clothing_product, 'socks_product': socks_product }
 
-    return render(request, 'shopapp/home.html', context)
+    # return render(request, 'shopapp/home.html', context)
+    return render(request, 'index.html', context)
 
 
 def catalog(request):
@@ -112,11 +113,13 @@ def cart(request):
 def checkout(request):
     data = cartData(request)
 
+
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
 
-    context = {'items': items, 'order': order, 'cartItems': cartItems}
+
+    context = {'items': items, 'order': order, 'cartItems': cartItems,}
     return render(request, 'shopapp/checkout.html', context)
 
 
@@ -168,6 +171,8 @@ def processOrder(request):
         city=data['shippingInfo']['city'],
         zip=data['shippingInfo']['zip'],
         phone=data['userFormData']['phone']
+        
     )
 
     return JsonResponse('Payment complited', safe=False)
+
